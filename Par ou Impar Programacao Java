@@ -1,0 +1,51 @@
+package kk.atividade4;
+
+import java.util.Scanner;
+import java.util.Random;
+
+public class Atividade4 {
+
+    public static void main(String[] args) {
+        
+        Scanner view = new Scanner(System.in);        
+        Random aleatorio = new Random();
+        
+        String palpite;
+        int numAleatorio, numPlayer, soma;
+        int[] surrogates = {0xD83D, 0xDE00};
+
+        
+        System.out.println("------- \uD83D\uDE00 Jogo de Par ou Impar \uD83D\uDE00 --------");
+        System.out.println("\nEscolha qual vai querer (P)ar ou (I)mpar: ");
+        palpite = view.next();
+        //palpite = view.next().toUpperCase().charAt( 0 );
+        
+        System.out.println("Escolha um numero entre 0 a 10 🤔🤔");
+        numPlayer = view.nextInt();
+        
+        numAleatorio = aleatorio.nextInt(11);
+        
+        System.out.println("Voce escolheu: " + numPlayer + "\nNumero Gerado: " + numAleatorio);
+        soma = numPlayer + numAleatorio;
+        
+        if((soma % 2 == 0) && ("P".equals(palpite)))
+        {
+            System.out.println("Voce ganhou 👍 \uD83D\uDE00 \nA soma deu: " + soma);
+        }
+        else if((soma % 2 == 1) && ("P".equals(palpite)))
+        {
+            
+            System.out.println("Voce Perdeu 👎 \nA soma deu: " + soma);
+        }
+                else if((soma % 2 == 1) && ("I".equals(palpite)))
+        {
+            
+            System.out.println("Voce Ganhou 👍 \uD83D\uDE00  \nA soma deu: " + soma);
+        }
+                else if((soma % 2 == 0) && ("I".equals(palpite)))
+        {
+            
+            System.out.println("Voce Perdeu 👎 \nA soma deu:  " + soma);
+        }
+    }
+}
