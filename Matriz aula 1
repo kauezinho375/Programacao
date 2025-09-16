@@ -1,0 +1,30 @@
+package kk.matrizesaula;
+
+import java.util.Scanner;
+
+public class MatrizesAula {
+
+    public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
+        int [][] matriz = new int[6][7];
+        int matrizNum;
+        
+        for (int l = 0; l < 6; l++){
+            
+            for (int c = 0; c < 7; c++){
+                System.out.println("Digite a matriz : ");
+                matrizNum = entrada.nextInt();
+                matriz[l][c] = matrizNum;
+            }
+        }
+        System.out.println("Matriz : ");
+        for (int l = 0; l < 6; l++){
+            
+            for (int c = 0; c < 7; c++){
+                System.out.print(matriz[l][c] + " ");
+                
+            }
+         System.out.println();
+        }
+    }
+}
