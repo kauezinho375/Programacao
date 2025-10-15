@@ -1,0 +1,102 @@
+package kk.mavenproject2;
+
+//================================================================
+class Retangulo {
+    private double comprimento;
+    private double largura;
+    
+    //Metodo Construtor #1
+    public Retangulo(){
+        System.out.println("\nConstrutor sem parametro");
+        comprimento = 10.0;
+        largura = 10.0;
+    }
+    
+    //Metodo Construtor #2
+    public Retangulo( double c , double l){
+        System.out.println("\nConstrutor com 2 parametro double");
+        comprimento = c;
+        largura = l;
+    }
+        //Metodo Construtor #3
+    public Retangulo( int c , double l){
+        System.out.println("\nConstrutor com 3 parametro : int e double");
+        comprimento = c;
+        largura = l;
+    }
+        //Metodo Construtor #4
+    public Retangulo( double c , int l){
+        System.out.println("\nConstrutor com 4 parametro : double e int");
+        comprimento = c;
+        largura = l;
+    }
+    
+    public void setComprimento (double c){
+            comprimento = c;
+    }
+    public void setLargura (double l){
+            largura = l;
+    }
+    public double getArea(){
+        return comprimento * largura;
+    }
+    public double getLargura(){
+        return largura;
+    }
+    public double getComprimento(){
+        return comprimento;
+    }
+}
+//================================================================
+public class Mavenproject2 {
+
+
+    public static void main(String[] args) {
+        
+        System.out.println("\n\nVamos fazer a primeira criacao de um objeto\n");
+        
+        // criaçao de um objeto de uma classe
+        
+        
+        Retangulo campo1 = new Retangulo( );
+        Retangulo campo2 = new Retangulo( 3.7 , 3.5 );
+        Retangulo campo3 = new Retangulo( 3 , 3.5 );
+        Retangulo campo4 = new Retangulo( 3.7 , 3 );
+        
+        System.out.println("\nArea " + campo1.getArea() );   
+        System.out.println("\nArea " + campo2.getArea() );
+        System.out.println("\nArea " + campo3.getArea() );
+        System.out.println("\nArea " + campo4.getArea() );
+        
+        
+        /*
+        Retangulo campo1;
+        campo1 = new Retangulo( 23 , 89.6 );
+        System.out.println("Area " + campo1.getArea() );
+        
+        campo1.setComprimento(34.0);
+        campo1.setLargura(78.5);
+        System.out.println("Area " + campo1.getArea() );
+        
+        
+        
+        
+        campo1.setComprimento(100);
+        campo1.setLargura(50);
+        System.out.println("\n\nLargura : " + campo1.getLargura() + " \nComprimento : " + campo1.getComprimento() + " \nArea : " + campo1.getArea() );
+        
+        Retangulo campo2 = new Retangulo();
+        
+        campo2.setComprimento(25);
+        campo2.setLargura(70);
+        System.out.println("\n\nLargura : " + campo2.getLargura() + " \nComprimento : " + campo2.getComprimento() + " \nArea : " + campo2.getArea() );
+
+        
+        if( campo1.getArea() > campo2.getArea() )
+            System.out.println("\nCampo1 e maior");
+        else
+            System.out.println("\nCampo2 e maioré");
+            */
+        
+    }
+}
