@@ -1,0 +1,176 @@
+package com.mycompany.exemploooprodutosa;
+
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class ExemploOOProdutosa {
+
+    public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
+        
+        Produto prod = null;
+        int opcao = -1;
+
+        do {
+            try {
+                System.out.println("\n=== MENU ===");
+                System.out.println("1 - Criar produto (vazio)");
+                System.out.println("2 - Criar produto com dados");
+                System.out.println("3 - Aumentar preço");
+                System.out.println("4 - Mostrar produto");
+                System.out.println("5 - Repor estoque");
+                System.out.println("6 - Ver disponibilidade de estoque");
+                System.out.println("7 - Vender produto");
+                System.out.println("0 - Sair");
+                System.out.print("\nOpção: ");
+
+                opcao = entrada.nextInt();
+                entrada.nextLine();
+
+                switch (opcao) {
+                    case 1 -> {
+                        prod = new Produto();
+                        System.out.println("\nProduto criado.\n");
+                    }
+                    case 2 -> {
+                        System.out.print("\nNome    : ");
+                        String nome = entrada.nextLine();
+                        
+                        System.out.print("Preço   : ");
+                        double preco = entrada.nextDouble();
+                        
+                        System.out.print("Estoque : ");
+                        int estoque = entrada.nextInt();
+                        entrada.nextLine();
+                        
+                        prod = new Produto(nome, preco, estoque);
+                        System.out.println("\nProduto criado!\n");
+                    }
+                    case 3 -> {
+                        if (prod != null) {
+                            System.out.print("\nValor a aumentar: ");
+                            double valor = entrada.nextDouble();
+                            entrada.nextLine();
+                            
+                            prod.aumentarPreco(valor);
+                            System.out.println("\nPreço atualizado!\n");
+                        } else {
+                            System.out.println("\nCrie um produto primeiro!\n");
+                        }
+                    }
+                    case 4 -> {
+                        if (prod != null) {
+                            prod.mostrarDados();
+                        } else {
+                            System.out.println("\nNenhum produto criado!\n");
+                        }
+                    }
+                    case 5 -> {
+                        if (prod != null) {
+                            System.out.print("\nQuantidade a repor: ");
+                            int qtd = entrada.nextInt();
+                            entrada.nextLine();
+                            
+                            prod.reporEstoque(qtd);
+                            System.out.println("\nEstoque atualizado!\n");
+                        } else {
+                            System.out.println("\nCrie um produto primeiro!\n");
+                        }
+                    }
+                    case 6 -> {
+                        if (prod != null) {
+                            prod.verDisponibilidadeEstoque();
+                        } else {
+                            System.out.println("\nCrie um produto primeiro!\n");
+                        }
+                    }
+                    case 7 -> {
+                        if (prod != null) {
+                            System.out.print("\nQuantidade a vender: ");
+                            int qtd = entrada.nextInt();
+                            entrada.nextLine();
+                            prod.venderProduto(qtd);
+                        } else {
+                            System.out.println("\nCrie um produto primeiro!\n");
+                        }
+                    }
+                    case 0 -> System.out.println("\nEncerrando...\n");
+                    default -> System.out.println("\nOpção inválida!\n");
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("\nEntrada inválida! Digite apenas números.");
+                entrada.nextLine();
+            } catch (Exception e) {
+                System.out.println("\nErro: " + e.getMessage());
+            }
+
+        } while (opcao != 0);
+
+        entrada.close();
+    }
+}
+
+class Produto {
+    
+    String nome;
+    double preco;
+    int estoque;
+
+    public Produto() {
+        nome = "Sem nome";
+        preco = 0.0;
+        estoque = 0;
+    }
+
+    public Produto(String nome, double preco, int estoque) {
+        this.nome = nome;
+        this.preco = preco;
+        this.estoque = estoque;
+    }
+
+    public void aumentarPreco(double valor) {
+        if (valor > 0) {
+            preco += valor;
+        } else {
+            System.out.println("\nValor inválido!\n");
+        }
+    }
+
+    public void mostrarDados() {
+        System.out.println("\n=== DADOS DO PRODUTO ===");
+        System.out.println("Nome   : " + nome);
+        System.out.println("Preço  : R$ " + preco);
+        System.out.println("Estoque: " + estoque);
+        System.out.println("==========================\n");
+    }
+
+    public void reporEstoque(int qtd) {
+        if (qtd > 0) {
+            estoque += qtd;
+        } else {
+            System.out.println("\nQuantidade inválida!\n");
+        }
+    }
+
+    public void verDisponibilidadeEstoque() {
+        if (estoque > 0) {
+            System.out.println("\nProduto disponível.\n");
+        } else {
+            System.out.println("\nSem estoque.\n");
+        }
+    }
+
+    public void venderProduto(int qtd) {
+        if (qtd <= 0) {
+            System.out.println("\nQuantidade inválida!\n");
+        } else if (qtd > estoque) {
+            System.out.println("\nEstoque insuficiente!\n");
+        } else {
+            estoque -= qtd;
+            System.out.println("\nVenda realizada!");
+            System.out.println("Quantidade vendida: " + qtd);
+            System.out.println("Estoque atual: " + estoque + "\n");
+        }
+    }
+}
