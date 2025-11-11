@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package kk.smartphone;
 
-/**
- *
- * @author uniavan
- */
 import java.util.Scanner;
 
 public class Smartphone {
@@ -17,6 +9,7 @@ public class Smartphone {
     private String cor;
     private double capacidadeArmazenamento;
     private double armazenamentoDisponivel;
+    private double armazenamentoUsado;  // Novo atributo para armazenar o espaço ocupado
     private int resolucaoCamera;
     private int nivelBateria;
     private boolean ligado;
@@ -32,6 +25,7 @@ public class Smartphone {
         this.cor = cor;
         this.capacidadeArmazenamento = capacidadeArmazenamento;
         this.armazenamentoDisponivel = capacidadeArmazenamento * 0.6; // 60% de espaço disponível
+        this.armazenamentoUsado = 0; // Inicialmente nenhum aplicativo foi instalado
         this.resolucaoCamera = resolucaoCamera;
         this.nivelBateria = 100; // Inicialmente 100%
         this.ligado = false; // Inicialmente o aparelho está desligado
@@ -66,6 +60,7 @@ public class Smartphone {
             System.out.println("Porcentagem inválida. A carga deve estar entre 0% e 100%.");
             return;
         }
+        // Verifica se o nível da bateria não ultrapassa 100%
         this.nivelBateria = Math.min(this.nivelBateria + percentual, 100);
         System.out.println("A bateria do " + this.modelo + " foi carregada para " + this.nivelBateria + "%.");
     }
@@ -80,12 +75,38 @@ public class Smartphone {
             System.out.println("Conecte-se a uma rede Wi-Fi para instalar o aplicativo.");
             return;
         }
+        if (tamanhoAplicativo <= 0) {
+            System.out.println("O tamanho do aplicativo deve ser maior que 0 GB.");
+            return;
+        }
         if (tamanhoAplicativo > this.armazenamentoDisponivel) {
             System.out.println("Não há espaço suficiente para instalar o aplicativo. Espaço disponível: " + this.armazenamentoDisponivel + " GB.");
             return;
         }
+        // Instala o aplicativo e ocupa espaço
         this.armazenamentoDisponivel -= tamanhoAplicativo;
+        this.armazenamentoUsado += tamanhoAplicativo;  // Aumenta o espaço usado
         System.out.println("Aplicativo instalado com sucesso. Espaço disponível agora: " + this.armazenamentoDisponivel + " GB.");
+    }
+
+    // Método para desinstalar aplicativo
+    public void desinstalarAplicativo(double tamanhoAplicativo) {
+        if (!this.ligado) {
+            System.out.println("O smartphone está desligado. Ligue-o antes de desinstalar o aplicativo.");
+            return;
+        }
+        if (tamanhoAplicativo <= 0) {
+            System.out.println("O tamanho do aplicativo deve ser maior que 0 GB.");
+            return;
+        }
+        if (tamanhoAplicativo > this.armazenamentoUsado) {
+            System.out.println("Não há aplicativos instalados com esse tamanho para desinstalar. Espaço utilizado atual: " + this.armazenamentoUsado + " GB.");
+            return;
+        }
+        // Desinstala o aplicativo e libera espaço
+        this.armazenamentoDisponivel += tamanhoAplicativo;
+        this.armazenamentoUsado -= tamanhoAplicativo;  // Diminui o espaço usado
+        System.out.println("Aplicativo desinstalado com sucesso. Espaço disponível agora: " + this.armazenamentoDisponivel + " GB.");
     }
 
     // Método para conectar/desconectar o Wi-Fi
@@ -189,6 +210,7 @@ public class Smartphone {
         System.out.println("Cor: " + this.cor);
         System.out.println("Bateria: " + this.nivelBateria + "%");
         System.out.println("Armazenamento disponível: " + this.armazenamentoDisponivel + " GB");
+        System.out.println("Espaço usado por aplicativos: " + this.armazenamentoUsado + " GB");
         System.out.println("Wi-Fi: " + wifi);
         System.out.println("Resolução da câmera: " + this.resolucaoCamera + " MP");
         System.out.println("Estado: " + estado);
@@ -207,10 +229,11 @@ public class Smartphone {
             System.out.println("4. Desconectar do Wi-Fi");
             System.out.println("5. Carregar a bateria");
             System.out.println("6. Instalar aplicativo");
-            System.out.println("7. Assistir vídeo");
-            System.out.println("8. Pausar vídeo");
-            System.out.println("9. Retomar vídeo");
-            System.out.println("10. Exibir informações");
+            System.out.println("7. Desinstalar aplicativo");
+            System.out.println("8. Assistir vídeo");
+            System.out.println("9. Pausar vídeo");
+            System.out.println("10. Retomar vídeo");
+            System.out.println("11. Exibir informações");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
             int opcao = scanner.nextInt();
@@ -239,17 +262,22 @@ public class Smartphone {
                     smartphone1.instalarAplicativo(tamanhoApp);
                     break;
                 case 7:
+                    System.out.print("Digite o tamanho do aplicativo a ser desinstalado (GB): ");
+                    double tamanhoDesinstalar = scanner.nextDouble();
+                    smartphone1.desinstalarAplicativo(tamanhoDesinstalar);
+                    break;
+                case 8:
                     System.out.print("Digite a duração do vídeo em segundos: ");
                     int duracao = scanner.nextInt();
                     smartphone1.assistirVideo(duracao);
                     break;
-                case 8:
+                case 9:
                     smartphone1.pausarVideo();
                     break;
-                case 9:
+                case 10:
                     smartphone1.retomarVideo();
                     break;
-                case 10:
+                case 11:
                     smartphone1.exibirInformacoes();
                     break;
                 case 0:
