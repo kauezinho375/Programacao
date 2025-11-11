@@ -1,0 +1,264 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package kk.smartphone;
+
+/**
+ *
+ * @author uniavan
+ */
+import java.util.Scanner;
+
+public class Smartphone {
+    // Atributos privados
+    private String marca;
+    private String modelo;
+    private String cor;
+    private double capacidadeArmazenamento;
+    private double armazenamentoDisponivel;
+    private int resolucaoCamera;
+    private int nivelBateria;
+    private boolean ligado;
+    private boolean wifiConectado;
+    private boolean assistindoVideo;
+    private boolean videoPausado;
+    private int duracaoEmSegundos;  // Duração do vídeo que está sendo assistido
+
+    // Construtor
+    public Smartphone(String marca, String modelo, String cor, double capacidadeArmazenamento, int resolucaoCamera) {
+        this.marca = marca;
+        this.modelo = modelo;
+        this.cor = cor;
+        this.capacidadeArmazenamento = capacidadeArmazenamento;
+        this.armazenamentoDisponivel = capacidadeArmazenamento * 0.6; // 60% de espaço disponível
+        this.resolucaoCamera = resolucaoCamera;
+        this.nivelBateria = 100; // Inicialmente 100%
+        this.ligado = false; // Inicialmente o aparelho está desligado
+        this.wifiConectado = false; // Inicialmente Wi-Fi está desconectado
+        this.assistindoVideo = false; // Inicialmente não está assistindo vídeo
+        this.videoPausado = false; // Inicialmente o vídeo não está pausado
+        this.duracaoEmSegundos = 0;  // Inicialmente sem vídeo
+    }
+
+    // Métodos para ligar e desligar o aparelho
+    public void ligar() {
+        if (!this.ligado) {
+            this.ligado = true;
+            System.out.println(this.modelo + " agora está ligado.");
+        } else {
+            System.out.println(this.modelo + " já está ligado.");
+        }
+    }
+
+    public void desligar() {
+        if (this.ligado) {
+            this.ligado = false;
+            System.out.println(this.modelo + " agora está desligado.");
+        } else {
+            System.out.println(this.modelo + " já está desligado.");
+        }
+    }
+
+    // Método para carregar a bateria
+    public void carregar(int percentual) {
+        if (percentual < 0 || percentual > 100) {
+            System.out.println("Porcentagem inválida. A carga deve estar entre 0% e 100%.");
+            return;
+        }
+        this.nivelBateria = Math.min(this.nivelBateria + percentual, 100);
+        System.out.println("A bateria do " + this.modelo + " foi carregada para " + this.nivelBateria + "%.");
+    }
+
+    // Método para instalar aplicativo
+    public void instalarAplicativo(double tamanhoAplicativo) {
+        if (!this.ligado) {
+            System.out.println("O smartphone está desligado. Ligue-o antes de instalar o aplicativo.");
+            return;
+        }
+        if (!this.wifiConectado) {
+            System.out.println("Conecte-se a uma rede Wi-Fi para instalar o aplicativo.");
+            return;
+        }
+        if (tamanhoAplicativo > this.armazenamentoDisponivel) {
+            System.out.println("Não há espaço suficiente para instalar o aplicativo. Espaço disponível: " + this.armazenamentoDisponivel + " GB.");
+            return;
+        }
+        this.armazenamentoDisponivel -= tamanhoAplicativo;
+        System.out.println("Aplicativo instalado com sucesso. Espaço disponível agora: " + this.armazenamentoDisponivel + " GB.");
+    }
+
+    // Método para conectar/desconectar o Wi-Fi
+    public void conectarWifi() {
+        if (!this.ligado) {
+            System.out.println("O smartphone está desligado. Ligue-o antes de conectar ao Wi-Fi.");
+            return;
+        }
+        this.wifiConectado = true;
+        System.out.println(this.modelo + " agora está conectado ao Wi-Fi.");
+    }
+
+    public void desconectarWifi() {
+        if (!this.wifiConectado) {
+            System.out.println(this.modelo + " já está desconectado do Wi-Fi.");
+            return;
+        }
+        this.wifiConectado = false;
+        System.out.println(this.modelo + " agora está desconectado do Wi-Fi.");
+    }
+
+    // Método para começar a assistir vídeo (reproduzindo em tempo real)
+    public void assistirVideo(int duracaoEmSegundos) {
+        if (!this.ligado) {
+            System.out.println("O smartphone está desligado. Ligue-o antes de assistir ao vídeo.");
+            return;
+        }
+        if (this.nivelBateria < 10) {
+            System.out.println("A bateria está muito baixa para assistir ao vídeo. Carregue o aparelho.");
+            return;
+        }
+        if (this.nivelBateria - (duracaoEmSegundos * 2) < 10) {
+            System.out.println("A reprodução do vídeo não pode começar porque a bateria ficaria abaixo de 10%.");
+            return;
+        }
+
+        this.duracaoEmSegundos = duracaoEmSegundos;  // Armazena a duração total do vídeo
+        this.assistindoVideo = true;  // Marca que está assistindo vídeo
+        this.videoPausado = false;   // Vídeo não está pausado
+
+        // Cria uma thread para consumir a bateria em tempo real enquanto o vídeo é assistido
+        Thread consumoBateriaThread = new Thread(() -> {
+            for (int i = 0; i < duracaoEmSegundos; i++) {
+                if (!assistindoVideo || nivelBateria < 10) {
+                    break;
+                }
+                try {
+                    Thread.sleep(1000);  // Espera 1 segundo antes de diminuir a bateria
+                    if (!videoPausado) {
+                        nivelBateria -= 2;   // Diminui 2% da bateria por segundo
+                        System.out.println("Assistindo a vídeo... Bateria agora em " + nivelBateria + "%.");
+                    }
+                    if (nivelBateria < 10) {
+                        System.out.println("A bateria ficou abaixo de 10%. O vídeo será pausado.");
+                        break;
+                    }
+                } catch (InterruptedException e) {
+                    System.out.println("Erro ao simular o consumo de bateria.");
+                }
+            }
+            if (nivelBateria >= 10) {
+                System.out.println("Vídeo finalizado. Bateria final: " + nivelBateria + "%.");
+            }
+            assistindoVideo = false;  // Marca que terminou de assistir o vídeo
+        });
+
+        consumoBateriaThread.start();  // Inicia a thread
+    }
+
+    // Método para pausar o vídeo
+    public void pausarVideo() {
+        if (!assistindoVideo) {
+            System.out.println("Nenhum vídeo está sendo assistido no momento.");
+            return;
+        }
+        this.videoPausado = true;  // Marca o vídeo como pausado
+        System.out.println("O vídeo foi pausado.");
+    }
+
+    // Método para retomar o vídeo
+    public void retomarVideo() {
+        if (!assistindoVideo) {
+            System.out.println("Nenhum vídeo está sendo assistido no momento.");
+            return;
+        }
+        if (videoPausado) {
+            this.videoPausado = false;  // Retoma o vídeo
+            System.out.println("O vídeo foi retomado.");
+        } else {
+            System.out.println("O vídeo já está sendo reproduzido.");
+        }
+    }
+
+    // Método para exibir as informações do smartphone
+    public void exibirInformacoes() {
+        String estado = (this.ligado) ? "ligado" : "desligado";
+        String wifi = (this.wifiConectado) ? "conectado" : "desconectado";
+        System.out.println("\nInformações do Smartphone:");
+        System.out.println("Marca: " + this.marca);
+        System.out.println("Modelo: " + this.modelo);
+        System.out.println("Cor: " + this.cor);
+        System.out.println("Bateria: " + this.nivelBateria + "%");
+        System.out.println("Armazenamento disponível: " + this.armazenamentoDisponivel + " GB");
+        System.out.println("Wi-Fi: " + wifi);
+        System.out.println("Resolução da câmera: " + this.resolucaoCamera + " MP");
+        System.out.println("Estado: " + estado);
+    }
+
+    // Método principal para testar o Smartphone com menu interativo
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Smartphone smartphone1 = new Smartphone("ViapTech", "VSmart X", "Preto", 64, 48);
+
+        while (true) {
+            System.out.println("\n=== Menu do Smartphone ===");
+            System.out.println("1. Ligar smartphone");
+            System.out.println("2. Desligar smartphone");
+            System.out.println("3. Conectar ao Wi-Fi");
+            System.out.println("4. Desconectar do Wi-Fi");
+            System.out.println("5. Carregar a bateria");
+            System.out.println("6. Instalar aplicativo");
+            System.out.println("7. Assistir vídeo");
+            System.out.println("8. Pausar vídeo");
+            System.out.println("9. Retomar vídeo");
+            System.out.println("10. Exibir informações");
+            System.out.println("0. Sair");
+            System.out.print("Escolha uma opção: ");
+            int opcao = scanner.nextInt();
+
+            switch (opcao) {
+                case 1:
+                    smartphone1.ligar();
+                    break;
+                case 2:
+                    smartphone1.desligar();
+                    break;
+                case 3:
+                    smartphone1.conectarWifi();
+                    break;
+                case 4:
+                    smartphone1.desconectarWifi();
+                    break;
+                case 5:
+                    System.out.print("Digite o percentual de carga (1-100): ");
+                    int carga = scanner.nextInt();
+                    smartphone1.carregar(carga);
+                    break;
+                case 6:
+                    System.out.print("Digite o tamanho do aplicativo (GB): ");
+                    double tamanhoApp = scanner.nextDouble();
+                    smartphone1.instalarAplicativo(tamanhoApp);
+                    break;
+                case 7:
+                    System.out.print("Digite a duração do vídeo em segundos: ");
+                    int duracao = scanner.nextInt();
+                    smartphone1.assistirVideo(duracao);
+                    break;
+                case 8:
+                    smartphone1.pausarVideo();
+                    break;
+                case 9:
+                    smartphone1.retomarVideo();
+                    break;
+                case 10:
+                    smartphone1.exibirInformacoes();
+                    break;
+                case 0:
+                    System.out.println("Saindo do programa...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Opção inválida! Tente novamente.");
+            }
+        }
+    }
+}
